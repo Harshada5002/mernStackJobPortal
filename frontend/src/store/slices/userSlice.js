@@ -1,5 +1,6 @@
+// File: frontend/src/store/slices/userSlice.js
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../utils/api";
 
 const userSlice = createSlice({
   name: "user",
@@ -91,8 +92,7 @@ const userSlice = createSlice({
 export const register = (data) => async (dispatch) => {
   dispatch(userSlice.actions.registerRequest());
   try {
-    const response = await axios.post(
-      "http://localhost:4000/api/v1/user/register",
+    const response = await api.post(`/api/v1/user/register`,
       data,
       {
         withCredentials: true,
@@ -109,8 +109,7 @@ export const register = (data) => async (dispatch) => {
 export const login = (data) => async (dispatch) => {
   dispatch(userSlice.actions.loginRequest());
   try {
-    const response = await axios.post(
-      "http://localhost:4000/api/v1/user/login",
+    const response = await api.post(`/api/v1/user/login`,
       data,
       {
         withCredentials: true,
@@ -127,10 +126,7 @@ export const login = (data) => async (dispatch) => {
 export const getUser = () => async (dispatch) => {
   dispatch(userSlice.actions.fetchUserRequest());
   try {
-    const response = await axios.get(
-      "http://localhost:4000/api/v1/user/getuser",
-      { withCredentials: true }
-    );
+    const response = await api.get(`/api/v1/user/getuser`);
 
     // Use optional chaining to avoid undefined errors
     dispatch(userSlice.actions.fetchUserSuccess(response.data?.user || {}));
@@ -143,12 +139,7 @@ export const getUser = () => async (dispatch) => {
 };
 export const logout = () => async (dispatch) => {
   try {
-    const response = await axios.get(
-      "http://localhost:4000/api/v1/user/logout",
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await api.get(`/api/v1/user/logout`);
     dispatch(userSlice.actions.logoutSuccess());
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
